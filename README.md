@@ -58,7 +58,7 @@ console.log(typeof ocean.wallet.getTokenBalance) // "undefined"
 ##
 API
 
-Methods in theoceanx.js are segemented into `marketData`, `trade`, `wallet`, and `ws`.
+Methods in theoceanx.js are segemented into `marketData`, `trade`, and `wallet`.
 
 `marketData`
  - [`marketData.tokenPairs()`](https://docs.theoceanx.com/)
