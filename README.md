@@ -23,7 +23,8 @@ const ocean = new Ocean(config)
 If API credentials are omitted, `trade` methods requiring authentication will be unavailable.
 
 ```javascript
-// no api credentials
+import Ocean from 'theoceanx'
+
 const config = {
   web3Provider: web3.currentProvider
 }
@@ -39,7 +40,8 @@ console.log(typeof ocean.trade.userHistory) // "undefined"
 If a web3 provider is omitted, all `trade` and `wallet` methods will be unavailable.
 
 ```javascript
-// no web3 provider
+import Ocean from 'theoceanx'
+
 const config = {
   api: {
     key: 'your key',
@@ -59,8 +61,32 @@ API
 Methods in theoceanx.js are segemented into `marketData`, `trade`, `wallet`, and `ws`.
 
 `marketData`
- - [`marketData.tokenPairs()`]()
- - [`marketData.tickers()`]()
- - [`marketData.ticker()`]()
+ - [`marketData.tokenPairs()`](https://docs.theoceanx.com/)
+ - [`marketData.tickers()`](https://docs.theoceanx.com/)
+ - [`marketData.ticker()`](https://docs.theoceanx.com/)
+ - [`marketData.orderBook()`](https://docs.theoceanx.com/)
+ - [`marketData.tradeHistory()`](https://docs.theoceanx.com/)
+ - [`marketData.candlesticks()`](https://docs.theoceanx.com/)
+ - [`marketData.orderInfo()`](https://docs.theoceanx.com/)
+ 
+`trade`
+ - [`marketData.newOrder()`](https://docs.theoceanx.com/)
+ - [`marketData.fillOrder()`](https://docs.theoceanx.com/)
+ - [`marketData.newLimitOrder()`](https://docs.theoceanx.com/)
+ - [`marketData.newMarketOrder()`](https://docs.theoceanx.com/)
+ - [`marketData.userHistory()`](https://docs.theoceanx.com/)
+ 
+ `wallet`
+ - [`wallet.getTokenBalance()`](https://docs.theoceanx.com/)
+ - [`wallet.getTokenAllowance()`](https://docs.theoceanx.com/)
+ - [`wallet.setTokenAllowance()`](https://docs.theoceanx.com/)
+ - [`wallet.setTokenAllowanceUnlimited()`](https://docs.theoceanx.com/)
+ - [`wallet.wrapEth()`](https://docs.theoceanx.com/)
+ - [`wallet.unwrapEth()`](https://docs.theoceanx.com/)
 
-
+ `ws`
+ - [`ws.subscribe()`](https://docs.theoceanx.com/)
+ - [`ws.unsubscribe()`](https://docs.theoceanx.com/)
+ - [`ws.getSubscriptions()`](https://docs.theoceanx.com/)
+ - [`ws.disconnect()`](https://docs.theoceanx.com/)
+ - [`ws.connect()`](https://docs.theoceanx.com/)
