@@ -70,11 +70,11 @@ Methods in theoceanx.js are segemented into `marketData`, `trade`, and `wallet`.
  - [`marketData.orderInfo()`](https://docs.theoceanx.com/)
  
 `trade`
- - [`marketData.newOrder()`](https://docs.theoceanx.com/)
- - [`marketData.fillOrder()`](https://docs.theoceanx.com/)
- - [`marketData.newLimitOrder()`](https://docs.theoceanx.com/)
- - [`marketData.newMarketOrder()`](https://docs.theoceanx.com/)
- - [`marketData.userHistory()`](https://docs.theoceanx.com/)
+ - [`trade.newOrder()`](https://docs.theoceanx.com/)
+ - [`trade.fillOrder()`](https://docs.theoceanx.com/)
+ - [`trade.newLimitOrder()`](https://docs.theoceanx.com/)
+ - [`trade.newMarketOrder()`](https://docs.theoceanx.com/)
+ - [`trade.userHistory()`](https://docs.theoceanx.com/)
  
  `wallet`
  - [`wallet.getTokenBalance()`](https://docs.theoceanx.com/)
