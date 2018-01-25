@@ -61,25 +61,25 @@ API
 Methods in theoceanx.js are segemented into `marketData`, `trade`, and `wallet`.
 
 `marketData`
- - [`marketData.tokenPairs()`](https://docs.theoceanx.com/)
- - [`marketData.tickers()`](https://docs.theoceanx.com/)
- - [`marketData.ticker()`](https://docs.theoceanx.com/)
- - [`marketData.orderBook()`](https://docs.theoceanx.com/)
- - [`marketData.tradeHistory()`](https://docs.theoceanx.com/)
- - [`marketData.candlesticks()`](https://docs.theoceanx.com/)
- - [`marketData.orderInfo()`](https://docs.theoceanx.com/)
+ - [`marketData.tokenPairs()`](https://docs.theoceanx.com/?javascript#token-pairs-2)
+ - [`marketData.tickers()`](https://docs.theoceanx.com/?javascript#tickers-2)
+ - [`marketData.ticker()`](https://docs.theoceanx.com/?javascript#ticker-2)
+ - [`marketData.orderBook()`](https://docs.theoceanx.com/?javascript#order-book-2)
+ - [`marketData.tradeHistory()`](https://docs.theoceanx.com/?javascript#trade-history-2)
+ - [`marketData.candlesticks()`](https://docs.theoceanx.com/?javascript#candlesticks)
+ - [`marketData.orderInfo()`](https://docs.theoceanx.com/?javascript#order-info-2)
  
 `trade`
- - [`trade.newOrder()`](https://docs.theoceanx.com/)
- - [`trade.fillOrder()`](https://docs.theoceanx.com/)
- - [`trade.newLimitOrder()`](https://docs.theoceanx.com/)
- - [`trade.newMarketOrder()`](https://docs.theoceanx.com/)
+ - [`trade.newOrder()`](https://docs.theoceanx.com/?javascript#add-order-2)
+ - [`trade.fillOrder()`](https://docs.theoceanx.com/?javascript#fill-order-2)
+ - [`trade.newLimitOrder()`](https://docs.theoceanx.com/?javascript#add-limit-order-2)
+ - [`trade.newMarketOrder()`](https://docs.theoceanx.com/?javascript#add-market-order-2)
  - [`trade.userHistory()`](https://docs.theoceanx.com/)
  
  `wallet`
- - [`wallet.getTokenBalance()`](https://docs.theoceanx.com/)
- - [`wallet.getTokenAllowance()`](https://docs.theoceanx.com/)
- - [`wallet.setTokenAllowance()`](https://docs.theoceanx.com/)
- - [`wallet.setTokenAllowanceUnlimited()`](https://docs.theoceanx.com/)
- - [`wallet.wrapEth()`](https://docs.theoceanx.com/)
- - [`wallet.unwrapEth()`](https://docs.theoceanx.com/)
+ - [`wallet.getTokenBalance()`](https://docs.theoceanx.com/?javascript#get-token-balance)
+ - [`wallet.getTokenAllowance()`](https://docs.theoceanx.com/?javascript#get-token-allowance)
+ - [`wallet.setTokenAllowance()`](https://docs.theoceanx.com/?javascript#set-token-allowance)
+ - [`wallet.setTokenAllowanceUnlimited()`](https://docs.theoceanx.com/?javascript#set-unlimited-token-allowance)
+ - [`wallet.wrapEth()`](https://docs.theoceanx.com/?javascript#wrap-ether)
+ - [`wallet.unwrapEth()`](https://docs.theoceanx.com/?javascript#unwrap-wrapped-ether)
