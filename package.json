@@ -1,0 +1,82 @@
+{
+  "name": "the-ocean-x",
+  "version": "0.1.0",
+  "description": "Official client to connect with The Ocean X.",
+  "main": "dist/the-ocean-x.node.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "npm run build",
+    "build": "webpack --progress --color ",
+    "build-watch": "webpack --progress --color --watch",
+    "lint": "standard 'src/**/*.js' 'test/**/*.js'",
+    "test": "jest",
+    "test-watch": "jest --watch"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "src"
+  ],
+  "repository": "git+https://github.com/TheOceanX/theoceanx-javascript.git",
+  "keywords": [
+    "The Ocean X",
+    "api",
+    "client",
+    "js"
+  ],
+  "author": "The Ocean team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheOceanX/theoceanx-javascript/issues"
+  },
+  "homepage": "https://github.com/TheOceanX/theoceanx-javascript#readme",
+  "dependencies": {
+    "0x.js": "^0.30.1",
+    "bignumber.js": "4.1.0",
+    "bluebird": "^3.5.1",
+    "debug": "^3.1.0",
+    "request": "2.83.0",
+    "request-promise-native": "1.0.5",
+    "socket.io": "^2.0.4",
+    "url-join": "^2.0.2",
+    "url-search-params": "^0.10.0",
+    "web3": "^0.20.4",
+    "xmlhttprequest": "1.8.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "chai": "4.1.2",
+    "chai-bignumber": "^2.0.2",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "json-loader": "0.5.7",
+    "rimraf": "^2.6.2",
+    "standard": "^10.0.3",
+    "watch-http-server": "0.7.6",
+    "webpack": "3.6.0",
+    "webpack-dev-server": "^2.9.7"
+  },
+  "jest": {
+    "verbose": true,
+    "bail": false,
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/.git/"
+    ],
+    "testMatch": [
+      "<rootDir>/(src|test)/**/*.test.js"
+    ]
+  },
+  "standard": {
+    "globals": [
+      "expect",
+      "describe",
+      "it"
+    ]
+  }
+}
