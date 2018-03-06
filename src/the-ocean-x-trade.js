@@ -1,34 +1,50 @@
 import api from './api'
 import serializers from './utils/serializers'
-import { BigNumber } from 'bignumber.js'
 import { ZeroEx } from '0x.js'
-import { getConfig } from './config/config'
-import _ from 'lodash'
+import './utils/jsdocsModels'
 
+/** A class to handle all trade functions */
 export class Trade {
+  /**
+   * Setup web3 and zeroEx
+   * @param {Web3Provider} web3 - The web3 provider instance
+   * @param {ZeroEx} zeroEx - The zeroEx instance
+   */
   constructor (web3, zeroEx) {
     this.web3 = web3
     this.zeroEx = zeroEx
   }
 
   /**
-   * Fills existing market orders for the specified token to buy or sell. First
+   * Signs order
+   * @param {Order|SignedOrder} order The order
+   * @param {String} signerAddress The ethereum address you wish to sign it with
+   * @returns Promise<SignedOrder>
+   */
+  async _signOrder (order, signerAddress) {
+    const orderHash = ZeroEx.getOrderHashHex(order)
+    const signature = await this.zeroEx.signOrderHashAsync(orderHash, signerAddress)
+    return Object.assign({}, order, {orderHash: orderHash, ecSignature: signature})
+  }
+
+  /**
+   * Places existing market orders for the specified token to buy or sell. First
    * it gets the existing orders then it matches the cheapest ones until the amount
    * to buy or sell is reached. For instance if you want to buy 10 ZRX  at market
    * price, then this function will get all the orders that are bidding for ZRX
-   * and fill until your amount is reached.
+   * and places until your amount is reached.
    *
    * 1. Request market/reserve with token pair and amount
    * 2. Returns unsigned order with unique ID
    * 3. Sign the order with zeroEx
-   * 4. Fill the order with market/fill with the signed order and intent ID
+   * 4. Places the order with market/place with the signed order and intent ID
    * @param {Object} params
-   * @param params.baseTokenAddress
-   * @param params.quoteTokenAddress
-   * @param params.side
-   * @param params.orderAmount
-   * @param [account=web3 default account]
-   * @returns {Promise<*>}
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @param {String} params.side=('buy'|'sell') The side of the order
+   * @param {String} params.orderAmount The amount of tokens to sell or buy
+   * @param {String} [account=web3.defaultAccount] The address of the account
+   * @returns {Promise<NewMarketOrderResponse>}
    */
   async newMarketOrder (params, account = this.web3.eth.defaultAccount) {
     const reserve = await api.trade.reserveMarketOrder(params)
@@ -41,7 +57,7 @@ export class Trade {
       signedOrder: serializedMarketOrder,
       marketOrderID: reserve.marketOrderID
     }
-    return api.trade.fillMarketOrder({order})
+    return api.trade.placeMarketOrder({order})
   }
 
   /**
@@ -52,15 +68,15 @@ export class Trade {
    * 2. Returns 2 unsigned orders with unique limiOrderID. One is the matching order (if any)
    * and the other is the order that will go to the order book
    * 3. Sign both orders with zeroEx
-   * 4. Fill the orders with market/submit with the signed orders and limitOrderID
+   * 4. Place the orders with market/submit with the signed orders and limitOrderID
    *
    * @param {Object} params
-   * @param params.baseTokenAddress
-   * @param params.quoteTokenAddress
-   * @param params.side
-   * @param params.orderAmount
-   * @param [account=web3 default account]
-   * @returns {Promise<void>}
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @param {String} params.side=('buy'|'sell') The side of the order
+   * @param {String} params.orderAmount The amount of tokens to sell or buy
+   * @param {String} [account=web3.defaultAccount] The address of the placing account
+   * @returns {Promise<PlaceLimitOrderNotImmediatelyPlaceableResponse|PlaceLimitOrderPartiallyImmediatelyPlaceableResponse|PlaceLimitOrderCompletelyImmediatelyPlaceableResponse>}
    */
   async newLimitOrder (params, account = this.web3.eth.defaultAccount) {
     const reserve = await api.trade.reserveLimitOrder(params)
@@ -78,104 +94,27 @@ export class Trade {
       order.marketOrderID = reserve.marketOrderID
     }
 
-    return api.trade.fillLimitOrder({order})
+    return api.trade.placeLimitOrder({order})
   }
 
   /**
-   * To fill an existing order
+   * Cancels an order
    * @param {Object} params
-   * @param params.orderHash
-   * @param [account=web3 default account]
-   * @returns {Promise<*>}
-   */
-  async fillOrder (params, account = this.web3.eth.defaultAccount) {
-    let orderHash = params.orderHash
-    // TODO in the future we should have orders stored locally
-    let order = await api.market.getOrderInfo({orderHash})
-    const data = {
-      makerTokenAddress: order.takerTokenAddress,
-      takerTokenAddress: order.makerTokenAddress,
-      makerTokenAmount: order.takerTokenAmount,
-      takerTokenAmount: order.makerTokenAmount
-    }
-    const signedOrder = await this._getSignedOrder(data, account)
-    return api.trade.fillOrder({orderHash, signedOrder})
-  }
-
-  /**
-   *
-   * @param {Object} params
-   * @param params.orderHash
-   * @returns {Promise<*>}
+   * @param params.orderHash The order hash
+   * @returns {Promise<OceanOrder>} the cancelled order
    */
   async cancelOrder (params) {
     return api.trade.cancelOrder(params)
   }
 
   /**
-   *
+   * Gets user history
    * @param {Object} params
-   * @param params.userId
-   * @returns {Promise<*>}
+   * @param params.userId The id of the user
+   * @returns {Promise<UserHistoryItem[]>}
    */
   async userHistory (params) {
     return api.trade.getUserHistory(params)
-  }
-
-  /**
-   *
-   * @param {Object} params
-   * @param params.baseTokenAddress
-   * @param params.quoteTokenAddress
-   * @param params.side
-   * @param params.orderAmount
-   * @param params.price
-   * @param params.timeInForce
-   * @param account
-   * @returns {Promise<*>}
-   */
-  async newOrder (params, account = this.web3.eth.defaultAccount) {
-    let {baseTokenAddress, quoteTokenAddress, side, orderAmount, price, timeInForce} = params
-    orderAmount = new BigNumber(orderAmount)
-    let data = {}
-    data.expirationUnixTimestampSec = new BigNumber(parseInt(Date.now() / 1000) + timeInForce)
-    if (side === 'buy') {
-      data.makerTokenAddress = quoteTokenAddress
-      data.takerTokenAddress = baseTokenAddress
-      data.makerTokenAmount = orderAmount.times(price).toString()
-      data.takerTokenAmount = orderAmount.toString()
-    } else if (side === 'sell') {
-      data.makerTokenAddress = baseTokenAddress
-      data.takerTokenAddress = quoteTokenAddress
-      data.makerTokenAmount = orderAmount.toString()
-      data.takerTokenAmount = orderAmount.times(price).toString()
-    }
-    const signedOrder = await this._getSignedOrder(data, account)
-
-    await api.trade.newOrder({signedOrder})
-    return signedOrder.orderHash
-  }
-
-  async _getSignedOrder (data, account) {
-    const defaultValues =
-      {
-        maker: account,
-        taker: getConfig().relay.funnel,
-        feeRecipient: getConfig().relay.feeRecipient,
-        exchangeContractAddress: getConfig().relay.exchange,
-        salt: ZeroEx.generatePseudoRandomSalt().toFixed(),
-        makerFee: new BigNumber(0),
-        takerFee: new BigNumber(0),
-        expirationUnixTimestampSec: new BigNumber(parseInt(Date.now() / 1000) + 3600)  // one hour from now
-      }
-    const unsignedOrder = _.merge({}, defaultValues, data)
-    return this._signOrder(unsignedOrder, account)
-  }
-
-  async _signOrder (order, etherAddress) {
-    const hash = ZeroEx.getOrderHashHex(order)
-    const signature = await this.zeroEx.signOrderHashAsync(hash, etherAddress)
-    return Object.assign({}, order, {orderHash: hash, ecSignature: signature})
   }
 }
 

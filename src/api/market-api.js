@@ -1,4 +1,4 @@
-import request from 'request-promise-native'
+import request from '../utils/request'
 import { Assert } from '../utils/asserts'
 import { getEndpoint, requestProperties } from './api-utils'
 import { getConfig } from '../config/config'
@@ -122,6 +122,24 @@ async function getOrderInfo ({orderHash}) {
   })
 }
 
+/**
+ *
+ * @param {Object} params
+ * @param params.tokenAddress
+ * @param params.userAddress
+ * @returns {Promise<*>}
+ */
+async function getAvailableBalance ({tokenAddress, userAddress}) {
+  return request({
+    ...requestProperties(),
+    url: `${getEndpoint(getConfig().api.AVAILABLE_BALANCE)}`,
+    qs: {
+      tokenAddress,
+      userAddress
+    }
+  })
+}
+
 module.exports = {
   getPairs,
   getTicker,
@@ -129,5 +147,6 @@ module.exports = {
   getOrderBook,
   getTradeHistory,
   getCandlesticks,
-  getOrderInfo
+  getOrderInfo,
+  getAvailableBalance
 }

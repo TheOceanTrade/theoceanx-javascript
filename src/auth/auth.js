@@ -1,4 +1,5 @@
-import request from 'request-promise-native'
+import request from '../utils/request'
+
 import { getConfig } from '../config/config'
 import urljoin from 'url-join'
 
@@ -19,8 +20,7 @@ const setApiKey = async (_apiKey, _secret) => {
     body: {
       apiKey: apiKey,
       secret: secret
-    },
-    json: true
+    }
   })
   if (response.accessToken) {
     idToken = response.idToken
@@ -39,8 +39,7 @@ const refreshTokens = async () => {
     body: {
       apiKey: apiKey,
       refreshToken: refreshToken.token
-    },
-    json: true
+    }
   })
 
   if (response.accessToken) {

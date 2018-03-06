@@ -10,6 +10,7 @@ describe('Config ', () => {
   it('should have default values', () => {
     expect(getConfig()).toEqual(
       {
+        web3Provider: null,
         websockets: 'localhost:3001',
         api: {
           baseURL: 'http://localhost:3000/api/v0',
@@ -18,9 +19,9 @@ describe('Config ', () => {
           ORDER_BOOK: '/order_book',
           CANCEL_ORDER: '/cancel_order',
           RESERVE_MARKET_ORDER: '/market_order/reserve',
-          FILL_MARKET_ORDER: '/market_order/fill',
+          PLACE_MARKET_ORDER: '/market_order/place',
           RESERVE_LIMIT_ORDER: '/limit_order/reserve',
-          FILL_LIMIT_ORDER: '/limit_order/fill',
+          PLACE_LIMIT_ORDER: '/limit_order/place',
           USER_HISTORY: '/user_history',
           TICKER: '/ticker',
           TICKERS: '/tickers',
@@ -28,7 +29,8 @@ describe('Config ', () => {
           TRADE_HISTORY: '/trade_history',
           ORDER_INFO: '/order',
           AUTH_TOKENS: '/auth/token',
-          AUTH_REFRESH: '/auth/refresh'
+          AUTH_REFRESH: '/auth/refresh',
+          AVAILABLE_BALANCE: '/available_balance'
         },
         relay: {
           funnel: '0x00ba938cc0df182c25108d7bf2ee3d37bce07513',

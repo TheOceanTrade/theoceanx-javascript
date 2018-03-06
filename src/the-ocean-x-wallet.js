@@ -1,5 +1,4 @@
 import { BigNumber } from 'bignumber.js'
-import { getConfig } from './config/config'
 
 BigNumber.config({EXPONENTIAL_AT: [-7, 50]})
 
@@ -14,11 +13,11 @@ export default class Wallet {
    * @param params
    * @param  {String}  params.etherAddress The owner address
    * @param  {String}  params.tokenAddress The string address of the token
-   * @return {BigNumber} The bignumber with your balance
+   * @return Promise<BigNumber> The bignumber with your balance
    */
   async getTokenBalance ({etherAddress, tokenAddress}) {
     const address = etherAddress || this.web3.eth.defaultAccount
-    return await this.zeroEx.token.getBalanceAsync(tokenAddress, address)
+    return this.zeroEx.token.getBalanceAsync(tokenAddress, address)
   }
 
   /**
@@ -26,11 +25,11 @@ export default class Wallet {
    * @param params
    * @param  {String}  params.etherAddress The owner address that allowed the relayer
    * @param  {String}  params.tokenAddress The string address of the token
-   * @return {BigNumber} The bignumber with your allowance
+   * @return Promise<BigNumber> The bignumber with your allowance
    */
   async getTokenAllowance ({etherAddress, tokenAddress}) {
     const address = etherAddress || this.web3.eth.defaultAccount
-    return await this.zeroEx.token.getProxyAllowanceAsync(tokenAddress, address)
+    return this.zeroEx.token.getProxyAllowanceAsync(tokenAddress, address)
   }
 
   /**
@@ -38,22 +37,23 @@ export default class Wallet {
    * @param params
    * @param  {String}  params.etherAddress The address of your ETH account
    * @param  {String}  params.tokenAddress The string address of the token
-   * @param  {BigNumber}  amountInWei Optional: How many tokens you want to allow.
-   * If undefined the amount will be unlimited
-   * @return {BigNumber} How much tokens you've allowed to the exchange already
+   * @param  {BigNumber}  params.amountInWei How many tokens you want to allow.
+   * @callback {submittedCallback} [params.onSubmit] The callback to be called after transaction send to the network
+   * @return Promise<Boolean> Operation status
    */
   async setTokenAllowance ({etherAddress, tokenAddress, amountInWei, onSubmit}) {
     const bigAmount = new BigNumber(this.web3.fromWei(amountInWei))
     const address = etherAddress || this.web3.eth.defaultAccount
-    const tx = await this.zeroEx.token.setProxyAllowanceAsync(tokenAddress, address, bigAmount)
+    const txHash = await this.zeroEx.token.setProxyAllowanceAsync(tokenAddress, address, bigAmount)
 
     if (onSubmit) onSubmit()
 
-    return this._awaitTxToComplete(tx).then(() => {
+    try {
+      await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
-    }).catch(() => {
+    } catch (e) {
       return false
-    })
+    }
   }
 
   /**
@@ -61,7 +61,8 @@ export default class Wallet {
    * @param params
    * @param  {String}  params.etherAddress The address of your ETH account
    * @param  {String}  params.tokenAddress The string address of the token
-   * @return {String} A confirmation message
+   * @callback {submittedCallback} [params.onSubmit] The callback to be called after transaction send to the network
+   * @return Promise<Boolean> Operation status
    */
   async setTokenAllowanceUnlimited ({etherAddress, tokenAddress, onSubmit}) {
     const ownerAddress = etherAddress || this.web3.eth.defaultAccount
@@ -77,21 +78,23 @@ export default class Wallet {
    * @param params
    * @param  {BigNumber}  params.amountInWei  How many ETH you want to convert to WETH
    * @param  {String}  params.address The address of your ETH account
-   * @return {BigNumber} How many tokens you've wrapped
+   * @callback {submittedCallback} [params.onSubmit] The callback to be called after transaction send to the network
+   * @return Promise<Boolean> Operation status
    */
   async wrapEth ({amountInWei, address, onSubmit}) {
     const etherAddress = await this.zeroEx.tokenRegistry.getTokenAddressBySymbolIfExistsAsync('WETH')
     const bigAmount = new BigNumber(amountInWei)
     const depositor = address || this.web3.eth.defaultAccount
-    const tx = await this.zeroEx.etherToken.depositAsync(etherAddress, bigAmount, depositor)
+    const txHash = await this.zeroEx.etherToken.depositAsync(etherAddress, bigAmount, depositor)
 
     if (onSubmit) onSubmit()
 
-    return this._awaitTxToComplete(tx).then(() => {
+    try {
+      await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
-    }).catch(() => {
+    } catch (e) {
       return false
-    })
+    }
   }
 
   /**
@@ -99,39 +102,22 @@ export default class Wallet {
    * @param params
    * @param  {BigNumber}  params.amountInWei  How many WETH you want to convert to ETH
    * @param  {String}  params.address The address of your ETH account
-   * @return {BigNumber} How many tokens you've unwrapped
+   * @callback {submittedCallback} [params.onSubmit] The callback to be called after transaction send to the network
+   * @return Promise<Boolean> Operation status
    */
   async unwrapEth ({amountInWei, address, onSubmit}) {
     const etherTokenAddress = await this.zeroEx.tokenRegistry.getTokenAddressBySymbolIfExistsAsync('WETH')
     const bigAmount = new BigNumber(amountInWei)
     const withdrawer = address || this.web3.eth.defaultAccount
-    const tx = await this.zeroEx.etherToken.withdrawAsync(etherTokenAddress, bigAmount, withdrawer)
+    const txHash = await this.zeroEx.etherToken.withdrawAsync(etherTokenAddress, bigAmount, withdrawer)
 
     if (onSubmit) onSubmit()
 
-    return this._awaitTxToComplete(tx).then(() => {
+    try {
+      await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
-    }).catch(() => {
+    } catch (e) {
       return false
-    })
-  }
-
-  async _awaitTxToComplete (txHash) {
-    return new Promise((resolve, reject) => {
-      const txChecking = setInterval(() => {
-        this.web3.eth.getTransactionReceipt(txHash, (err, result) => {
-          if (!err) {
-            if (result) {
-              result.status === 1 ? resolve() : reject()
-              clearInterval(txChecking)
-            }
-            // If there is no result that means that the TX is still pending.
-          } else {
-            reject(err)
-            clearInterval(txChecking)
-          }
-        })
-      }, 1000)
-    })
+    }
   }
 }

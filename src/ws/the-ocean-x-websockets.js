@@ -6,6 +6,7 @@ import { CHANNEL, RESPONSE_CHANNEL } from './streams/constants'
 import GenericPairsStream from './streams/generic-pairs-stream'
 import UserHistoryStream from './streams/user-history-stream'
 import { getAuthToken } from '../auth/auth'
+import CandlestickStream from './streams/candlestick-stream'
 
 const debug = require('debug')('the-ocean-x:stream')
 
@@ -18,7 +19,7 @@ export default class OceanXStreams {
 
   _initControllers () {
     CONTROLLERS[CHANNEL.ORDER_BOOK] = new GenericPairsStream(this.io, CHANNEL.ORDER_BOOK)
-    CONTROLLERS[CHANNEL.CANDLESTICKS] = new GenericPairsStream(this.io, CHANNEL.CANDLESTICKS)
+    CONTROLLERS[CHANNEL.CANDLESTICKS] = new CandlestickStream(this.io, CHANNEL.CANDLESTICKS)
     CONTROLLERS[CHANNEL.TRADE_HISTORY] = new GenericPairsStream(this.io, CHANNEL.TRADE_HISTORY)
     CONTROLLERS[CHANNEL.USER_HISTORY] = new UserHistoryStream(this.io)
   }
@@ -45,11 +46,7 @@ export default class OceanXStreams {
    * @param callback
    */
   subscribe (channel, payload, callback) {
-    if (channel === CHANNEL.USER_HISTORY) {
-      CONTROLLERS[channel].subscribe(payload, callback)
-    } else if (CONTROLLERS[channel]) {
-      return CONTROLLERS[channel].subscribe(payload, callback)
-    }
+    CONTROLLERS[channel].subscribe(payload, callback)
   }
 
   /**
@@ -58,7 +55,7 @@ export default class OceanXStreams {
    */
   unsubscribe (channel) {
     if (CONTROLLERS[channel]) {
-      CONTROLLERS[channel].unsubscribe(channel)
+      CONTROLLERS[channel].unsubscribeAll()
     }
   }
 
@@ -83,11 +80,11 @@ export default class OceanXStreams {
    */
   disconnect () {
     this.io.disconnect()
-    this.isConnected = false
+    this.connected = false
   }
 
   isConnected () {
-    return this.isConnected
+    return this.connected
   }
 
   connect () {
@@ -96,11 +93,11 @@ export default class OceanXStreams {
       this.io.on('connect', () => {
         this._initControllers()
         this.io.on(RESPONSE_CHANNEL, this._messageHandler)
-        this.isConnected = true
+        this.connected = true
         resolve()
       })
       this.io.on('error', (error) => {
-        this.isConnected = false
+        this.connected = false
         reject(error)
       })
     })

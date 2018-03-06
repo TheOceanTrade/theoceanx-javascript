@@ -12,8 +12,6 @@ describe('Trade ', () => {
   it('implements trade methods', () => {
     expect(trade.newMarketOrder).toBeDefined()
     expect(trade.newLimitOrder).toBeDefined()
-    expect(trade.newOrder).toBeDefined()
-    expect(trade.fillOrder).toBeDefined()
     expect(trade.cancelOrder).toBeDefined()
     expect(trade.userHistory).toBeDefined()
   })

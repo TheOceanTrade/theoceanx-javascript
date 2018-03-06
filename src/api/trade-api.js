@@ -1,11 +1,11 @@
-import request from 'request-promise-native'
+import request from '../utils/request'
 
-import { getEndpoint, requestProperties, toRequest } from './api-utils'
+import { getEndpoint, requestProperties } from './api-utils'
 import { getConfig } from '../config/config'
 import { getAuthToken, refreshTokens } from '../auth/auth'
 
 /**
- * Reserve market order
+ * To reserve market order
  * @param {Object} params
  * @param params.baseTokenAddress
  * @param params.quoteTokenAddress
@@ -27,7 +27,7 @@ async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, o
 }
 
 /**
- * Reserve limit order
+ * To reserve limit order
  * @param {Object} params
  * @param params.baseTokenAddress
  * @param params.quoteTokenAddress
@@ -51,66 +51,37 @@ async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, or
 }
 
 /**
- * Fill market order
+ * To place market order
  * @param {Object} params
- * @param params.signedOrder
+ * @param params.order The order to place
  * @returns {Promise<*>}
  */
-async function fillMarketOrder ({order}) {
+async function placeMarketOrder ({order}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
-    url: getEndpoint(getConfig().api.FILL_MARKET_ORDER),
+    url: getEndpoint(getConfig().api.PLACE_MARKET_ORDER),
     body: order
   })
 }
 
 /**
+ * To place limit order
  * @param {Object} params
- * @param params.order
+ * @param params.order The order to place
  * @returns {Promise<*>}
  */
-async function fillLimitOrder ({order}) {
+async function placeLimitOrder ({order}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
-    url: getEndpoint(getConfig().api.FILL_LIMIT_ORDER),
+    url: getEndpoint(getConfig().api.PLACE_LIMIT_ORDER),
     body: order
   })
 }
 
 /**
- *
+ * To cancel order
  * @param {Object} params
- * @param params.signedOrder
- * @returns {Promise<*>}
- */
-async function newOrder ({signedOrder}) {
-  return authRequestWrapper({
-    ...requestProperties('POST'),
-    url: getEndpoint(getConfig().api.ORDER),
-    body: signedOrder
-  })
-}
-
-/**
- * Fill order
- * @param {Object} params
- * @param params.orderHash
- * @param params.signedOrder
- * @returns {Promise<*>}
- */
-async function fillOrder ({orderHash, signedOrder}) {
-  signedOrder = toRequest(signedOrder)
-  return authRequestWrapper({
-    ...requestProperties('POST'),
-    url: `${getEndpoint(getConfig().api.ORDER)}/${orderHash}/fill`,
-    body: {signedOrder}
-  })
-}
-
-/**
- * Cancel order
- * @param {Object} params
- * @param params.orderHash
+ * @param {String} params.orderHash The order hash
  * @returns {Promise<*>}
  */
 async function cancelOrder ({orderHash}) {
@@ -121,8 +92,9 @@ async function cancelOrder ({orderHash}) {
 }
 
 /**
+ * To get user history
  * @param {Object=} params
- * @param {string=} params.userId
+ * @param {string} params.userId=null
  * @returns {Promise<*>}
  */
 async function getUserHistory ({userId} = {userId: null}) {
@@ -158,10 +130,8 @@ async function authRequestWrapper (params, retries = 5) {
 module.exports = {
   reserveMarketOrder,
   reserveLimitOrder,
-  fillMarketOrder,
-  fillLimitOrder,
-  newOrder,
-  fillOrder,
+  placeMarketOrder,
+  placeLimitOrder,
   cancelOrder,
   getUserHistory
 }

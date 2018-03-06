@@ -27,8 +27,9 @@ describe('MarketData ', () => {
     expect(market.tickers).toBeDefined()
     expect(market.orderBook).toBeDefined()
     expect(market.tradeHistory).toBeDefined()
-    expect(market.candleSticks).toBeDefined()
+    expect(market.candlesticks).toBeDefined()
     expect(market.orderInfo).toBeDefined()
+    expect(market.availableBalance).toBeDefined()
   })
 
   // it('resolves tickers and waits for docker-containers with api-node, redis db, and localchain', async () => {

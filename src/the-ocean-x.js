@@ -10,24 +10,33 @@ import { zeroExConfigByNetworkId } from './utils/constans'
 import { promisify } from './utils/utils'
 import OceanXStreams from './ws/the-ocean-x-websockets'
 
-async function createTheOceanX (web3Provider = null, config = {}) {
+/**
+ * Creates TheOceanX client
+ * @param {Web3Provider} [web3Provider=null] The web3 provider
+ * @param {Object} [config={}] The config object
+ * @returns Promise<TheOceanXClient>
+ */
+async function createTheOceanX (config = {}) {
   setConfig(config)
-  if (config.api && config.api.key && config.api.secret) {
+  const hasAuth = config.api && config.api.key && config.api.secret
+  if (hasAuth) {
     await setApiKey(config.api.key, config.api.secret)
+  } else {
+    console.warn('OceanX client initialized without authentication! Trade methods are unavailable.')
   }
-
-  if (web3Provider === null) {
+  if (!config.web3Provider) {
     console.warn('OceanX client initialized without web3 provider! Only market data methods are available.')
     return {
       marketData: new MarketData(),
-      stream: new OceanXStreams(getConfig().websockets)
+      ws: new OceanXStreams(getConfig().websockets)
     }
   }
 
-  const provider = web3Provider || new Web3.providers.HttpProvider('http://localhost:8545')
+  const provider = config.web3Provider
   const web3 = new Web3(provider)
+  const getWeb3Accounts = () => promisify(web3.eth.getAccounts)
   if (!web3.eth.defaultAccount) {
-    web3.eth.defaultAccount = web3.eth.accounts[0]
+    web3.eth.defaultAccount = (await getWeb3Accounts())[0]
   }
 
   const networkId = await promisify(web3.version.getNetwork)
@@ -40,14 +49,19 @@ async function createTheOceanX (web3Provider = null, config = {}) {
 
   updateConfigExchange(zeroEx)
 
-  return {
+  const OceanX = {
     marketData: new MarketData(),
-    trade: new Trade(web3, zeroEx),
     wallet: new Wallet(web3, zeroEx),
-    getWeb3Accounts: async () => promisify(web3.eth.getAccounts),
+    getWeb3Accounts,
     setApiKeyAndSecret: setApiKey,
-    stream: new OceanXStreams(getConfig().websockets)
+    ws: new OceanXStreams(getConfig().websockets)
   }
+
+  if (hasAuth) {
+    OceanX.trade = new Trade(web3, zeroEx)
+  }
+
+  return OceanX
 }
 
 // following line is left intentionally to support webpack's UMD output format

@@ -1,81 +1,90 @@
 import api from './api'
+import './utils/jsdocsModels'
 
 export class MarketData {
-    /**
-     * Get the token pairs ZRX and WETH
-     * @return {Array} Returns the array of object token pairs, each one containing
-     * the address, minimum purchase amount, maximum amount and precision
-     */
+  /**
+   * Get the token pairs ZRX and WETH
+   * @returns {Promise<TokenPair[]>} Returns the array of object token pairs
+   */
   async tokenPairs () {
     return api.market.getPairs()
   }
 
-  // TODO: TBD: how to name main params object
-    /**
-     * To get recent activity on a given token pair
-     * @param {Object} params
-     * @param params.baseTokenAddress
-     * @param params.quoteTokenAddress
-     * @returns {Promise<*>}
-     */
+  /**
+   * To get recent activity on a given token pair
+   * @param {Object} params
+   * @param {String} params.baseTokenAddress The pair's base token address
+   * @param {String} params.quoteTokenAddress The pair's quote token address
+   * @returns {Promise<Ticker>}
+   */
   async ticker (params) {
     return api.market.getTicker(params)
   }
 
-    /**
-     * To get the activity data for all the token pairs
-     * @return {Array} Array of objects with the information of the baseTokenAddress,
-     * quoteTokenAddress, bid, ask, last, baseTokenVolume, quoteTokenVolume and timestamp
-     */
+  /**
+   * To get the activity data for all the token pairs
+   * @returns {Promise<TickerEntry[]>}
+   */
   async tickers () {
     return api.market.getTickers()
   }
 
-    /**
-     * To get the order book with the existing orders
-     * @param {Object} params
-     * @param params.baseTokenAddress
-     * @param params.quoteTokenAddress
-     * @param params.depth
-     * @returns {Promise<*>}
-     */
+  /**
+   * To get the order book with the existing orders
+   * @param {Object} params
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @param {Number} params.depth The maximum number of orders in the book
+   * @returns {Promise<OrderBook>}
+   */
   async orderBook (params) {
     return api.market.getOrderBook(params)
   }
 
-    /**
-     * Get a list of all past and present orders for a user
-     * @param {Object} params
-     * @param params.baseTokenAddress
-     * @param params.quoteTokenAddress
-     * @returns {Promise<*>}
-     */
+  /**
+   * Get a list of all past and present orders for a user
+   * @param {Object} params
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @returns {Promise<TradeHistoryItem[]>}
+   */
   async tradeHistory (params) {
     return api.market.getTradeHistory(params)
   }
 
-    /**
-     * To get the candle sticks for the specific tokens, time and interval
-     * @param {Object} params
-     * @param params.baseTokenAddress
-     * @param params.quoteTokenAddress
-     * @param params.startTime
-     * @param params.endTime
-     * @param params.interval
-     * @returns {Promise<*>}
-     */
-  async candleSticks (params) {
+  /**
+   * To get the candlesticks for the specific tokens, time and interval
+   * @param {Object} params
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @param {String} params.startTime The start time in unix epoch
+   * @param {String} params.endTime The end time in unix epoch
+   * @param {String} params.interval The interval in seconds
+   * @returns {Promise<Candlestick[]>}
+   */
+  async candlesticks (params) {
     return api.market.getCandlesticks(params)
   }
 
-    /**
-     * Get order info
-     * @param {Object} params
-     * @param params.orderHash
-     * @returns {Promise<*>}
-     */
+  /**
+   * Get order info
+   * @param {Object} params
+   * @param {String} params.orderHash The hash of order
+   * @returns {Promise<OceanOrder>}
+   */
   async orderInfo (params) {
     return api.market.getOrderInfo(params)
+  }
+
+  /**
+   * Get availableBalance for user
+   * @param {Object} params
+   * @param {String} params.tokenAddress The hash of token
+   * @param {String} params.userAddress The hash of user
+   * @returns {Promise<OceanOrder>}
+   */
+  async availableBalance (params) {
+    return api.market.getAvailableBalance(params)
   }
 }
 
