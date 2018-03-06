@@ -1,6 +1,11 @@
 CHANGELOG
 =============
 
+0.2.1
+------
+
+* Change ethereumjs-util version
+
 0.2.0
 ------
 
