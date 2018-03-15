@@ -1,6 +1,12 @@
 CHANGELOG
 =============
 
+0.3.1
+------
+
+* No need to provide `api.baseURL` and `websockets` params during initialization
+* Change websockets messages to contain more information (refer to https://docs.theoceanx.com)
+
 0.2.1
 ------
 

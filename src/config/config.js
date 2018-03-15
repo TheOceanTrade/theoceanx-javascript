@@ -2,9 +2,9 @@ import _ from 'lodash'
 
 const defaultConfig = {
   web3Provider: null,
-  websockets: 'localhost:3001',
+  websockets: process.env.WS_URL || 'localhost:3001',
   api: {
-    baseURL: 'http://localhost:3000/api/v0',
+    baseURL: process.env.API_URL || 'http://localhost:3000/api/v0',
     ORDER: '/order',
     TOKEN_PAIRS: '/token_pairs',
     ORDER_BOOK: '/order_book',

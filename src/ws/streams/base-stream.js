@@ -80,7 +80,7 @@ export default class BaseStream {
     this._debug('received', msg)
     const channelId = msg.channelId
     if (this.subscriptions[channelId]) {
-      this.subscriptions[channelId].callback(msg.payload)
+      this.subscriptions[channelId].callback(msg)
     } else {
       this._debug('not event handler for ', channelId)
     }

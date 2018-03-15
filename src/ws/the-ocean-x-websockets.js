@@ -96,7 +96,7 @@ export default class OceanXStreams {
         this.connected = true
         resolve()
       })
-      this.io.on('error', (error) => {
+      this.io.on('connect_error', (error) => {
         this.connected = false
         reject(error)
       })
