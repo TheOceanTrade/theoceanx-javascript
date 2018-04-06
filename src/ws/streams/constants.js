@@ -15,7 +15,8 @@ export const CHANNEL = {
   ORDER_BOOK: 'order_book',
   CANDLESTICKS: 'candlesticks',
   TRADE_HISTORY: 'trade_history',
-  USER_HISTORY: 'user_history'
+  USER_HISTORY: 'user_history',
+  TICKER_STATS: 'ticker_stats'
 }
 
 export const USER_ID_PARAM = 'userId'

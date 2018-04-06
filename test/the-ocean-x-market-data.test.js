@@ -28,6 +28,7 @@ describe('MarketData ', () => {
     expect(market.orderBook).toBeDefined()
     expect(market.tradeHistory).toBeDefined()
     expect(market.candlesticks).toBeDefined()
+    expect(market.candlesticksIntervals).toBeDefined()
     expect(market.orderInfo).toBeDefined()
     expect(market.availableBalance).toBeDefined()
   })

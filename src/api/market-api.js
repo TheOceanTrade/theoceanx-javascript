@@ -2,6 +2,7 @@ import request from '../utils/request'
 import { Assert } from '../utils/asserts'
 import { getEndpoint, requestProperties } from './api-utils'
 import { getConfig } from '../config/config'
+import { authRequestWrapper } from '../auth/auth'
 
 /**
  *
@@ -111,6 +112,17 @@ async function getCandlesticks ({baseTokenAddress, quoteTokenAddress, startTime,
 
 /**
  *
+ * @returns {Promise<*>}
+ */
+async function getCandlesticksIntervals () {
+  return request({
+    ...requestProperties(),
+    url: getEndpoint(getConfig().api.CANDLESTICKS_INTERVALS)
+  })
+}
+
+/**
+ *
  * @param {Object} params
  * @param params.orderHash
  * @returns {Promise<*>}
@@ -130,7 +142,7 @@ async function getOrderInfo ({orderHash}) {
  * @returns {Promise<*>}
  */
 async function getAvailableBalance ({tokenAddress, userAddress}) {
-  return request({
+  return authRequestWrapper({
     ...requestProperties(),
     url: `${getEndpoint(getConfig().api.AVAILABLE_BALANCE)}`,
     qs: {
@@ -147,6 +159,7 @@ module.exports = {
   getOrderBook,
   getTradeHistory,
   getCandlesticks,
+  getCandlesticksIntervals,
   getOrderInfo,
   getAvailableBalance
 }

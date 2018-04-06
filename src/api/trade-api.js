@@ -1,8 +1,6 @@
-import request from '../utils/request'
-
 import { getEndpoint, requestProperties } from './api-utils'
 import { getConfig } from '../config/config'
-import { getAuthToken, refreshTokens } from '../auth/auth'
+import { authRequestWrapper } from '../auth/auth'
 
 /**
  * To reserve market order
@@ -11,9 +9,10 @@ import { getAuthToken, refreshTokens } from '../auth/auth'
  * @param params.quoteTokenAddress
  * @param params.side
  * @param params.orderAmount
+ * @param params.feeOption
  * @returns {Promise<*>}
  */
-async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount}) {
+async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, feeOption}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
     url: getEndpoint(getConfig().api.RESERVE_MARKET_ORDER),
@@ -21,7 +20,8 @@ async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, o
       baseTokenAddress,
       quoteTokenAddress,
       side,
-      orderAmount
+      orderAmount,
+      feeOption
     }
   })
 }
@@ -34,9 +34,10 @@ async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, o
  * @param params.side
  * @param params.orderAmount
  * @param params.price
+ * @param params.feeOption
  * @returns {Promise<*>}
  */
-async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, price}) {
+async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, price, feeOption}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
     url: getEndpoint(getConfig().api.RESERVE_LIMIT_ORDER),
@@ -45,7 +46,8 @@ async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, or
       quoteTokenAddress,
       side,
       orderAmount,
-      price
+      price,
+      feeOption
     }
   })
 }
@@ -105,26 +107,6 @@ async function getUserHistory ({userId} = {userId: null}) {
       userId
     }
   })
-}
-
-async function authRequestWrapper (params, retries = 5) {
-  if (retries < 0) {
-    throw new Error('Too many authenticatino retries!')
-  }
-
-  try {
-    return await request(params)
-  } catch (error) {
-    // check to see if this is expired access token
-    // if it refresh the token and try the request again
-    if (error.statusCode === 401 && getAuthToken()) {
-      await refreshTokens()
-
-      return authRequestWrapper(params, --retries)
-    } else {
-      throw error
-    }
-  }
 }
 
 module.exports = {

@@ -5,7 +5,7 @@ import MarketData from './the-ocean-x-market-data'
 import Trade from './the-ocean-x-trade'
 import Wallet from './the-ocean-x-wallet'
 import { getConfig, setConfig, updateConfigExchange } from './config/config'
-import { setApiKey } from './auth/auth'
+import { setApiKey, setDashboardUserTokens } from './auth/auth'
 import { zeroExConfigByNetworkId } from './utils/constans'
 import { promisify } from './utils/utils'
 import OceanXStreams from './ws/the-ocean-x-websockets'
@@ -18,9 +18,13 @@ import OceanXStreams from './ws/the-ocean-x-websockets'
  */
 async function createTheOceanX (config = {}) {
   setConfig(config)
-  const hasAuth = config.api && config.api.key && config.api.secret
-  if (hasAuth) {
+  const apiKeyAuth = config.api && config.api.key && config.api.secret
+  const dashboardAuth = config.dashboardAuth && config.dashboardAuth.username && config.dashboardAuth.accessToken && config.dashboardAuth.idToken && config.dashboardAuth.refreshToken
+  const hasAuth = apiKeyAuth || dashboardAuth
+  if (apiKeyAuth) {
     await setApiKey(config.api.key, config.api.secret)
+  } else if (dashboardAuth) {
+    await setDashboardUserTokens(config.dashboardAuth.username, config.dashboardAuth.accessToken, config.dashboardAuth.idToken, config.dashboardAuth.refreshToken)
   } else {
     console.warn('OceanX client initialized without authentication! Trade methods are unavailable.')
   }

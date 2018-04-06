@@ -5,7 +5,7 @@ import io from 'socket.io-client'
 import { CHANNEL, RESPONSE_CHANNEL } from './streams/constants'
 import GenericPairsStream from './streams/generic-pairs-stream'
 import UserHistoryStream from './streams/user-history-stream'
-import { getAuthToken } from '../auth/auth'
+import { getWsAuthQuery } from '../auth/auth'
 import CandlestickStream from './streams/candlestick-stream'
 
 const debug = require('debug')('the-ocean-x:stream')
@@ -15,6 +15,10 @@ let CONTROLLERS = {}
 export default class OceanXStreams {
   constructor (url) {
     this.url = url
+    this.handledErrorEvents = [
+      'error',
+      'connect_error'
+    ]
   }
 
   _initControllers () {
@@ -22,6 +26,7 @@ export default class OceanXStreams {
     CONTROLLERS[CHANNEL.CANDLESTICKS] = new CandlestickStream(this.io, CHANNEL.CANDLESTICKS)
     CONTROLLERS[CHANNEL.TRADE_HISTORY] = new GenericPairsStream(this.io, CHANNEL.TRADE_HISTORY)
     CONTROLLERS[CHANNEL.USER_HISTORY] = new UserHistoryStream(this.io)
+    CONTROLLERS[CHANNEL.TICKER_STATS] = new GenericPairsStream(this.io, CHANNEL.TICKER_STATS)
   }
 
   /**
@@ -89,17 +94,18 @@ export default class OceanXStreams {
 
   connect () {
     return new Promise((resolve, reject) => {
-      this.io = io(this.url, {query: {token: getAuthToken()}})
+      const authQuery = getWsAuthQuery()
+      this.io = io(this.url, { query: authQuery })
       this.io.on('connect', () => {
         this._initControllers()
         this.io.on(RESPONSE_CHANNEL, this._messageHandler)
         this.connected = true
         resolve()
       })
-      this.io.on('connect_error', (error) => {
+      this.handledErrorEvents.forEach(errorType => this.io.on(errorType, (error) => {
         this.connected = false
         reject(error)
-      })
+      }))
     })
   }
 }

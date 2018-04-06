@@ -67,6 +67,14 @@ export class MarketData {
   }
 
   /**
+   * To get a list of available candlesticks intervals
+   * @returns {Promise<String[]>}
+   */
+  async candlesticksIntervals () {
+    return api.market.getCandlesticksIntervals()
+  }
+
+  /**
    * Get order info
    * @param {Object} params
    * @param {String} params.orderHash The hash of order

@@ -26,6 +26,7 @@ describe('Config ', () => {
           TICKER: '/ticker',
           TICKERS: '/tickers',
           CANDLESTICKS: '/candlesticks',
+          CANDLESTICKS_INTERVALS: '/candlesticks/intervals',
           TRADE_HISTORY: '/trade_history',
           ORDER_INFO: '/order',
           AUTH_TOKENS: '/auth/token',

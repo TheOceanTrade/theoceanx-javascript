@@ -43,6 +43,7 @@ export class Trade {
    * @param {String} params.quoteTokenAddress The address of quote token
    * @param {String} params.side=('buy'|'sell') The side of the order
    * @param {String} params.orderAmount The amount of tokens to sell or buy
+   * @param {String} params.feeOption=('feeInZrx'|'feeInNative') Chosen fee method
    * @param {String} [account=web3.defaultAccount] The address of the account
    * @returns {Promise<NewMarketOrderResponse>}
    */
@@ -75,6 +76,7 @@ export class Trade {
    * @param {String} params.quoteTokenAddress The address of quote token
    * @param {String} params.side=('buy'|'sell') The side of the order
    * @param {String} params.orderAmount The amount of tokens to sell or buy
+   * @param {String} params.feeOption=('feeInZrx'|'feeInNative') Chosen fee method
    * @param {String} [account=web3.defaultAccount] The address of the placing account
    * @returns {Promise<PlaceLimitOrderNotImmediatelyPlaceableResponse|PlaceLimitOrderPartiallyImmediatelyPlaceableResponse|PlaceLimitOrderCompletelyImmediatelyPlaceableResponse>}
    */

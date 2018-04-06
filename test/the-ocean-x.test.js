@@ -49,4 +49,50 @@ describe('MarketData ', () => {
     expect(api.setApiKeyAndSecret).toBeDefined()
     expect(api.trade).toBeUndefined()
   })
+
+  it('exposes trade api if API key and secret are provided', async () => {
+    console.warn = jest.fn(warn => {})
+    let web3Provider = new Web3.providers.HttpProvider('https://kovan.infura.io/XGsH1k50zyZmp6J5CwUz')
+    const api = await createTheOceanX({
+      web3Provider: web3Provider,
+      api: {
+        baseURL: process.env.API_URL,
+        key: 'apikey',
+        secret: 'secret'
+      }
+    })
+    expect(api).toBeDefined()
+    expect(console.warn).not.toHaveBeenCalled()
+    expect(api.marketData).toBeDefined()
+    expect(api.ws).toBeDefined()
+    expect(api.wallet).toBeDefined()
+    expect(api.getWeb3Accounts).toBeDefined()
+    expect(api.setApiKeyAndSecret).toBeDefined()
+    expect(api.trade).toBeDefined()
+  })
+
+  it('exposes trade api if dashboard user tokens are provided', async () => {
+    console.warn = jest.fn(warn => {})
+    let web3Provider = new Web3.providers.HttpProvider('https://kovan.infura.io/XGsH1k50zyZmp6J5CwUz')
+    const api = await createTheOceanX({
+      web3Provider: web3Provider,
+      api: {
+        baseURL: process.env.API_URL
+      },
+      dashboardAuth: {
+        username: 'email@theoceanx.com',
+        accessToken: 'access_token',
+        idToken: 'id_token',
+        refreshToken: 'refresh_token'
+      }
+    })
+    expect(api).toBeDefined()
+    expect(console.warn).not.toHaveBeenCalled()
+    expect(api.marketData).toBeDefined()
+    expect(api.ws).toBeDefined()
+    expect(api.wallet).toBeDefined()
+    expect(api.getWeb3Accounts).toBeDefined()
+    expect(api.setApiKeyAndSecret).toBeDefined()
+    expect(api.trade).toBeDefined()
+  })
 })

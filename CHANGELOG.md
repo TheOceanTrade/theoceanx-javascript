@@ -1,6 +1,14 @@
 CHANGELOG
 =============
 
+0.4.0
+------
+
+* Better authentication
+* Fees components
+* `candlesticksIntervals` method which allows to get available candlesticks intervals
+* better error handling for websockets connection
+
 0.3.1
 ------
 
