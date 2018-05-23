@@ -10,9 +10,10 @@ import { authRequestWrapper } from '../auth/auth'
  * @param params.side
  * @param params.orderAmount
  * @param params.feeOption
+ * @param params.walletAddress
  * @returns {Promise<*>}
  */
-async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, feeOption}) {
+async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, feeOption, walletAddress}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
     url: getEndpoint(getConfig().api.RESERVE_MARKET_ORDER),
@@ -21,7 +22,8 @@ async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, o
       quoteTokenAddress,
       side,
       orderAmount,
-      feeOption
+      feeOption,
+      walletAddress
     }
   })
 }
@@ -35,9 +37,10 @@ async function reserveMarketOrder ({baseTokenAddress, quoteTokenAddress, side, o
  * @param params.orderAmount
  * @param params.price
  * @param params.feeOption
+ * @param params.walletAddress
  * @returns {Promise<*>}
  */
-async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, price, feeOption}) {
+async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, orderAmount, price, feeOption, walletAddress}) {
   return authRequestWrapper({
     ...requestProperties('POST'),
     url: getEndpoint(getConfig().api.RESERVE_LIMIT_ORDER),
@@ -47,7 +50,8 @@ async function reserveLimitOrder ({baseTokenAddress, quoteTokenAddress, side, or
       side,
       orderAmount,
       price,
-      feeOption
+      feeOption,
+      walletAddress
     }
   })
 }
@@ -109,11 +113,23 @@ async function getUserHistory ({userId} = {userId: null}) {
   })
 }
 
+/**
+ * To get user data
+ * @returns {Promise<*>}
+ */
+async function userData () {
+  return authRequestWrapper({
+    url: getEndpoint(getConfig().api.USER_DATA),
+    ...requestProperties()
+  })
+}
+
 module.exports = {
   reserveMarketOrder,
   reserveLimitOrder,
   placeMarketOrder,
   placeLimitOrder,
   cancelOrder,
-  getUserHistory
+  getUserHistory,
+  userData
 }

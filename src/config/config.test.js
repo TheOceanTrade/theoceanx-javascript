@@ -27,11 +27,14 @@ describe('Config ', () => {
           TICKERS: '/tickers',
           CANDLESTICKS: '/candlesticks',
           CANDLESTICKS_INTERVALS: '/candlesticks/intervals',
+          FEE_COMPONENTS: '/fee_components',
           TRADE_HISTORY: '/trade_history',
           ORDER_INFO: '/order',
           AUTH_TOKENS: '/auth/token',
           AUTH_REFRESH: '/auth/refresh',
-          AVAILABLE_BALANCE: '/available_balance'
+          AVAILABLE_BALANCE: '/available_balance',
+          COMMITTED_AMOUNTS: '/committed_amounts',
+          USER_DATA: '/user_data'
         },
         relay: {
           funnel: '0x00ba938cc0df182c25108d7bf2ee3d37bce07513',

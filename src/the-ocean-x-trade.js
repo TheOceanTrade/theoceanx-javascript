@@ -1,5 +1,6 @@
 import api from './api'
 import serializers from './utils/serializers'
+import { isEthereumAddress } from './utils/utils'
 import { ZeroEx } from '0x.js'
 import './utils/jsdocsModels'
 
@@ -48,7 +49,10 @@ export class Trade {
    * @returns {Promise<NewMarketOrderResponse>}
    */
   async newMarketOrder (params, account = this.web3.eth.defaultAccount) {
-    const reserve = await api.trade.reserveMarketOrder(params)
+    if (!isEthereumAddress(account)) {
+      throw Error(`Bad account provided (${account}) to newMarketOrder`)
+    }
+    const reserve = await api.trade.reserveMarketOrder({ walletAddress: account, ...params })
     // console.log(reserve) //TODO: this result is suspiciously rich object
 
     const marketOrder = Object.assign({}, reserve.unsignedOrder, {maker: account})
@@ -81,7 +85,10 @@ export class Trade {
    * @returns {Promise<PlaceLimitOrderNotImmediatelyPlaceableResponse|PlaceLimitOrderPartiallyImmediatelyPlaceableResponse|PlaceLimitOrderCompletelyImmediatelyPlaceableResponse>}
    */
   async newLimitOrder (params, account = this.web3.eth.defaultAccount) {
-    const reserve = await api.trade.reserveLimitOrder(params)
+    if (!isEthereumAddress(account)) {
+      throw Error(`Bad account provided (${account}) to newLimitOrder`)
+    }
+    const reserve = await api.trade.reserveLimitOrder({ walletAddress: account, ...params })
     const order = {}
     if (reserve.unsignedTargetOrder) {
       const targetOrder = Object.assign({}, reserve.unsignedTargetOrder, {maker: account})
@@ -117,6 +124,14 @@ export class Trade {
    */
   async userHistory (params) {
     return api.trade.getUserHistory(params)
+  }
+
+  /**
+   * Gets user data
+   * @returns {Promise<UserData[]>}
+   */
+  async userData () {
+    return api.trade.userData()
   }
 }
 

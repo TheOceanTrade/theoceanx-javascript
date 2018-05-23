@@ -1,4 +1,5 @@
-import _ from 'lodash'
+import has from 'lodash/has'
+import merge from 'lodash/merge'
 
 const defaultConfig = {
   web3Provider: null,
@@ -22,7 +23,10 @@ const defaultConfig = {
     ORDER_INFO: '/order',
     AUTH_TOKENS: '/auth/token',
     AUTH_REFRESH: '/auth/refresh',
-    AVAILABLE_BALANCE: '/available_balance'
+    AVAILABLE_BALANCE: '/available_balance',
+    COMMITTED_AMOUNTS: '/committed_amounts',
+    FEE_COMPONENTS: '/fee_components',
+    USER_DATA: '/user_data'
   },
   relay: {
     funnel: '0x00ba938cc0df182c25108d7bf2ee3d37bce07513',
@@ -34,14 +38,14 @@ let config = defaultConfig
 
 function updateConfigExchange (zeroEx) {
   let c = getConfig()
-  if (!_.has(c, 'relay.exchange')) {
+  if (!has(c, 'relay.exchange')) {
     c.relay.exchange = zeroEx.exchange.getContractAddress()
   }
   setConfig(c)
 }
 
 const setConfig = c => {
-  config = _.merge({}, defaultConfig, c)
+  config = merge({}, defaultConfig, c)
 }
 
 const getConfig = () => config
