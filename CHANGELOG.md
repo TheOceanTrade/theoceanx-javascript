@@ -1,6 +1,15 @@
 CHANGELOG
 =============
 
+0.4.10
+------
+
+* walletAddress required in /reserve endpoint
+* Add /committed_amounts endpoint
+* Add /fee_components endpoint
+* Add /user_data endpoint
+* Add user_data stream ws channel
+
 0.4.0
 ------
 

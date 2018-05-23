@@ -94,6 +94,25 @@ export class MarketData {
   async availableBalance (params) {
     return api.market.getAvailableBalance(params)
   }
+
+  /**
+   * Get committed amounts for user
+   * @param {Object} params
+   * @param {String} params.tokenAddress The hash of token
+   * @param {String} params.walletAddress The hash of wallet address
+   * @returns {Promise<OceanOrder>}
+   */
+  async committedAmounts (params) {
+    return api.market.getCommittedAmounts(params)
+  }
+
+  /**
+   * Get fee components
+   * @returns {Promise<FeeComponents>}
+   */
+  async feeComponents () {
+    return api.market.getFeeComponents()
+  }
 }
 
 export default MarketData

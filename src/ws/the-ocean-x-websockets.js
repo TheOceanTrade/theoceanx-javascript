@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import { CHANNEL, RESPONSE_CHANNEL } from './streams/constants'
 import GenericPairsStream from './streams/generic-pairs-stream'
 import UserHistoryStream from './streams/user-history-stream'
+import UserDataStream from './streams/user-data-stream'
 import { getWsAuthQuery } from '../auth/auth'
 import CandlestickStream from './streams/candlestick-stream'
 
@@ -26,6 +27,7 @@ export default class OceanXStreams {
     CONTROLLERS[CHANNEL.CANDLESTICKS] = new CandlestickStream(this.io, CHANNEL.CANDLESTICKS)
     CONTROLLERS[CHANNEL.TRADE_HISTORY] = new GenericPairsStream(this.io, CHANNEL.TRADE_HISTORY)
     CONTROLLERS[CHANNEL.USER_HISTORY] = new UserHistoryStream(this.io)
+    CONTROLLERS[CHANNEL.USER_DATA] = new UserDataStream(this.io)
     CONTROLLERS[CHANNEL.TICKER_STATS] = new GenericPairsStream(this.io, CHANNEL.TICKER_STATS)
   }
 

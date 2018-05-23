@@ -1,6 +1,6 @@
 {
   "name": "the-ocean-x",
-  "version": "0.4.0",
+  "version": "0.4.10",
   "description": "Official client to connect with The Ocean X.",
   "main": "dist/the-ocean-x.commonjs2.js",
   "scripts": {
@@ -8,8 +8,8 @@
     "start": "npm run build",
     "build": "webpack --progress --color ",
     "build-watch": "webpack --progress --color --watch",
-    "lint": "standard 'src/**/*.js' 'test/**/*.js'",
-    "lint-fix": "standard --fix 'src/**/*.js' 'test/**/*.js'",
+    "lint": "standard 'src/**/*.js' 'src/*.js' 'test/**/*.js' 'test/*.js'",
+    "lint-fix": "standard --fix 'src/**/*.js' 'src/*.js' 'test/**/*.js' 'test/*.js'",
     "test": "jest",
     "test-watch": "jest --watch",
     "test-integration": "jest --config integration/jest.config.js",

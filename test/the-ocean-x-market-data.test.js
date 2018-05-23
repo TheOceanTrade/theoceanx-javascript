@@ -31,6 +31,8 @@ describe('MarketData ', () => {
     expect(market.candlesticksIntervals).toBeDefined()
     expect(market.orderInfo).toBeDefined()
     expect(market.availableBalance).toBeDefined()
+    expect(market.committedAmounts).toBeDefined()
+    expect(market.feeComponents).toBeDefined()
   })
 
   // it('resolves tickers and waits for docker-containers with api-node, redis db, and localchain', async () => {

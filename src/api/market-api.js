@@ -152,6 +152,35 @@ async function getAvailableBalance ({tokenAddress, userAddress}) {
   })
 }
 
+/**
+ *
+ * @param {Object} params
+ * @param params.tokenAddress
+ * @param params.walletAddress
+ * @returns {Promise<*>}
+ */
+async function getCommittedAmounts ({tokenAddress, walletAddress}) {
+  return authRequestWrapper({
+    ...requestProperties(),
+    url: `${getEndpoint(getConfig().api.COMMITTED_AMOUNTS)}`,
+    qs: {
+      tokenAddress,
+      walletAddress
+    }
+  })
+}
+
+/**
+ *
+ * @returns {Promise<*>}
+ */
+async function getFeeComponents () {
+  return request({
+    ...requestProperties(),
+    url: getEndpoint(getConfig().api.FEE_COMPONENTS)
+  })
+}
+
 module.exports = {
   getPairs,
   getTicker,
@@ -161,5 +190,7 @@ module.exports = {
   getCandlesticks,
   getCandlesticksIntervals,
   getOrderInfo,
-  getAvailableBalance
+  getAvailableBalance,
+  getFeeComponents,
+  getCommittedAmounts
 }

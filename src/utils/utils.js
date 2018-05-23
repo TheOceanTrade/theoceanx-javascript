@@ -10,3 +10,7 @@ export const promisify = (action) =>
 export const getTimestamp = () => {
   return Date.now() / 1000
 }
+
+export function isEthereumAddress (address) {
+  return /^(0x)?[0-9a-fA-F]{40}$/i.test(address)
+}
