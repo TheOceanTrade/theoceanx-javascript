@@ -5,4 +5,6 @@ dist/
 .temp/
 npm-debug.log
 .env
+# yarn.lock
+yarn-error.log
 .DS_Store

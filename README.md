@@ -1,2 +1,2 @@
-# theoceanx.js
-Please refer to our documentation at https://docs.theoceanx.com/
+# the-ocean
+Please refer to our documentation at https://docs.theocean.trade/

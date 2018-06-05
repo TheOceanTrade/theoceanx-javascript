@@ -1,1 +1,1 @@
-module.exports = require('./dist/the-ocean-x.umd.js')
+module.exports = require('./dist/the-ocean.umd.js')

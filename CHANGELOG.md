@@ -1,6 +1,21 @@
 CHANGELOG
 =============
 
+1.0.1
+-----
+
+* fix minor bug
+
+1.0.0
+-----
+
+* rename package to `the-ocean`
+
+0.5.0
+-----
+
+* change default config with new addresses
+
 0.4.10
 ------
 
