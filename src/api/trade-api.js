@@ -124,7 +124,45 @@ async function userData () {
   })
 }
 
+/**
+ *
+ * @param {Object} params
+ * @param params.tokenAddress
+ * @param params.walletAddress
+ * @returns {Promise<*>}
+ */
+async function getTokenAvailableBalance ({tokenAddress, walletAddress}) {
+  return authRequestWrapper({
+    ...requestProperties(),
+    url: `${getEndpoint(getConfig().api.AVAILABLE_BALANCE)}`,
+    qs: {
+      tokenAddress,
+      walletAddress
+    }
+  })
+}
+
+/**
+ *
+ * @param {Object} params
+ * @param params.tokenAddress
+ * @param params.walletAddress
+ * @returns {Promise<*>}
+ */
+async function getTokenCommittedAmount ({tokenAddress, walletAddress}) {
+  return authRequestWrapper({
+    ...requestProperties(),
+    url: `${getEndpoint(getConfig().api.COMMITTED_AMOUNT)}`,
+    qs: {
+      tokenAddress,
+      walletAddress
+    }
+  })
+}
+
 module.exports = {
+  getTokenAvailableBalance,
+  getTokenCommittedAmount,
   reserveMarketOrder,
   reserveLimitOrder,
   placeMarketOrder,

@@ -31,7 +31,6 @@ const refreshTokens = async () => {
   if (!username || !refreshToken) {
     return
   }
-
   const response = await request({
     method: 'POST',
     url: urljoin(getConfig().api.baseURL, getConfig().api.AUTH_REFRESH),

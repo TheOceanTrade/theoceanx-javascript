@@ -1,7 +1,7 @@
 import BaseUserStream from './base-user-stream'
 import { CHANNEL } from './constants'
 
-const debug = require('debug')('the-ocean-x:stream:user-history')
+const debug = require('debug')('the-ocean:stream:user-history')
 
 export default class UserHistoryStream extends BaseUserStream {
   constructor (io) {

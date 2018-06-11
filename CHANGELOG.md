@@ -1,6 +1,13 @@
 CHANGELOG
 =============
 
+1.1.1
+-----
+
+* change etherAddress, userAddress to walletAddress
+* move getTokenCommittedAmount and getTokenAvailableBalance to trade
+* getTokenCommittedAmount and getTokenAvailableBalance return {BigNumber} object
+
 1.0.1
 -----
 

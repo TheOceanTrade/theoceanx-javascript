@@ -1,22 +1,22 @@
 import { ZeroEx } from '0x.js'
 import Web3 from 'web3'
 
-import MarketData from './the-ocean-x-market-data'
-import Trade from './the-ocean-x-trade'
-import Wallet from './the-ocean-x-wallet'
+import MarketData from './the-ocean-market-data'
+import Trade from './the-ocean-trade'
+import Wallet from './the-ocean-wallet'
 import { getConfig, setConfig, updateConfigExchange } from './config/config'
 import { setApiKey, setDashboardUserTokens } from './auth/auth'
 import { zeroExConfigByNetworkId } from './utils/constans'
 import { promisify } from './utils/utils'
-import OceanXStreams from './ws/the-ocean-x-websockets'
+import OceanXStreams from './ws/the-ocean-websockets'
 
 /**
- * Creates TheOceanX client
+ * Creates TheOcean client
  * @param {Web3Provider} [web3Provider=null] The web3 provider
  * @param {Object} [config={}] The config object
- * @returns Promise<TheOceanXClient>
+ * @returns Promise<TheOceanClient>
  */
-async function createTheOceanX (config = {}) {
+async function createTheOcean (config = {}) {
   setConfig(config)
   const apiKeyAuth = config.api && config.api.key && config.api.secret
   const dashboardAuth = config.dashboardAuth && config.dashboardAuth.username && config.dashboardAuth.accessToken && config.dashboardAuth.idToken && config.dashboardAuth.refreshToken
@@ -53,7 +53,7 @@ async function createTheOceanX (config = {}) {
 
   updateConfigExchange(zeroEx)
 
-  const OceanX = {
+  const Ocean = {
     marketData: new MarketData(),
     wallet: new Wallet(web3, zeroEx),
     getWeb3Accounts,
@@ -62,13 +62,14 @@ async function createTheOceanX (config = {}) {
   }
 
   if (hasAuth) {
-    OceanX.trade = new Trade(web3, zeroEx)
+    Ocean.trade = new Trade(web3, zeroEx)
+    Ocean.setDashboardUserTokens = setDashboardUserTokens
   }
 
-  return OceanX
+  return Ocean
 }
 
 // following line is left intentionally to support webpack's UMD output format
-module.exports = createTheOceanX
+module.exports = createTheOcean
 
-export default createTheOceanX
+export default createTheOcean

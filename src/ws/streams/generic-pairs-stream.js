@@ -1,6 +1,6 @@
 import BaseStream from './base-stream'
 
-const debug = require('debug')('the-ocean-x:stream:generic-pair-stream')
+const debug = require('debug')('the-ocean:stream:generic-pair-stream')
 
 export default class GenericPairsStream extends BaseStream {
   constructor (io, channel) {

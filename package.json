@@ -1,8 +1,8 @@
 {
-  "name": "the-ocean-x",
-  "version": "0.4.11",
-  "description": "Official client to connect with The Ocean X.",
-  "main": "dist/the-ocean-x.commonjs2.js",
+  "name": "the-ocean",
+  "version": "1.1.1",
+  "description": "Official client to connect with The Ocean.",
+  "main": "dist/the-ocean.commonjs2.js",
   "scripts": {
     "clean": "rimraf dist",
     "start": "npm run build",
@@ -22,9 +22,9 @@
     "web.js",
     "node.js"
   ],
-  "repository": "git+https://github.com/TheOceanX/theoceanx-javascript.git",
+  "repository": "git+https://github.com/TheOceanTrade/theoceanx-javascript.git",
   "keywords": [
-    "The Ocean X",
+    "The Ocean",
     "api",
     "client",
     "js"
@@ -32,9 +32,9 @@
   "author": "The Ocean team",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheOceanX/theoceanx-javascript/issues"
+    "url": "https://github.com/TheOceanTrade/theoceanx-javascript/issues"
   },
-  "homepage": "https://github.com/TheOceanX/theoceanx-javascript#readme",
+  "homepage": "https://github.com/TheOceanTrade/theoceanx-javascript#readme",
   "dependencies": {
     "0x.js": "^0.30.1",
     "axios": "^0.18.0",

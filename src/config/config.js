@@ -24,7 +24,7 @@ const defaultConfig = {
     AUTH_TOKENS: '/auth/token',
     AUTH_REFRESH: '/auth/refresh',
     AVAILABLE_BALANCE: '/available_balance',
-    COMMITTED_AMOUNTS: '/committed_amounts',
+    COMMITTED_AMOUNT: '/committed_amount',
     FEE_COMPONENTS: '/fee_components',
     USER_DATA: '/user_data'
   },

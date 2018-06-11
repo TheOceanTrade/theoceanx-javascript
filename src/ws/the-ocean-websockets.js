@@ -9,7 +9,7 @@ import UserDataStream from './streams/user-data-stream'
 import { getWsAuthQuery } from '../auth/auth'
 import CandlestickStream from './streams/candlestick-stream'
 
-const debug = require('debug')('the-ocean-x:stream')
+const debug = require('debug')('the-ocean:stream')
 
 let CONTROLLERS = {}
 

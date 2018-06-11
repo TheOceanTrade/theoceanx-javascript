@@ -2,6 +2,7 @@ import api from './api'
 import serializers from './utils/serializers'
 import { isEthereumAddress } from './utils/utils'
 import { ZeroEx } from '0x.js'
+import { BigNumber } from 'bignumber.js'
 import './utils/jsdocsModels'
 
 /** A class to handle all trade functions */
@@ -132,6 +133,36 @@ export class Trade {
    */
   async userData () {
     return api.trade.userData()
+  }
+
+  /**
+   * Get token available balance for user
+   * @param {Object} params
+   * @param {String} params.tokenAddress The hash of token
+   * @param {String} params.walletAddress The hash of user
+   * @returns {BigNumber}
+   */
+  async tokenAvailableBalance (params) {
+    const response = await api.trade.getTokenAvailableBalance(params)
+    if (response.availableBalance) {
+      return new BigNumber(response.availableBalance)
+    } else { return response }
+  }
+
+  /**
+   * Get committed amounts for user
+   * @param {Object} params
+   * @param {String} params.tokenAddress The hash of token
+   * @param {String} params.walletAddress The hash of wallet address
+   * @returns {BigNumber}
+   */
+  async tokenCommittedAmount (params) {
+    const response = await api.trade.getTokenCommittedAmount(params)
+    if (response.amount) {
+      return new BigNumber(response.amount)
+    } else {
+      return response
+    }
   }
 }
 

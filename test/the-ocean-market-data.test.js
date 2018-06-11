@@ -1,7 +1,7 @@
 /* global expect, describe, it, beforeEach  */
 
 import { setConfig } from '../src/config/config'
-import { MarketData } from './../src/the-ocean-x-market-data'
+import { MarketData } from '../src/the-ocean-market-data'
 
 describe('MarketData ', () => {
   let market
@@ -30,8 +30,6 @@ describe('MarketData ', () => {
     expect(market.candlesticks).toBeDefined()
     expect(market.candlesticksIntervals).toBeDefined()
     expect(market.orderInfo).toBeDefined()
-    expect(market.availableBalance).toBeDefined()
-    expect(market.committedAmounts).toBeDefined()
     expect(market.feeComponents).toBeDefined()
   })
 

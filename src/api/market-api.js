@@ -2,7 +2,6 @@ import request from '../utils/request'
 import { Assert } from '../utils/asserts'
 import { getEndpoint, requestProperties } from './api-utils'
 import { getConfig } from '../config/config'
-import { authRequestWrapper } from '../auth/auth'
 
 /**
  *
@@ -136,42 +135,6 @@ async function getOrderInfo ({orderHash}) {
 
 /**
  *
- * @param {Object} params
- * @param params.tokenAddress
- * @param params.userAddress
- * @returns {Promise<*>}
- */
-async function getAvailableBalance ({tokenAddress, userAddress}) {
-  return authRequestWrapper({
-    ...requestProperties(),
-    url: `${getEndpoint(getConfig().api.AVAILABLE_BALANCE)}`,
-    qs: {
-      tokenAddress,
-      userAddress
-    }
-  })
-}
-
-/**
- *
- * @param {Object} params
- * @param params.tokenAddress
- * @param params.walletAddress
- * @returns {Promise<*>}
- */
-async function getCommittedAmounts ({tokenAddress, walletAddress}) {
-  return authRequestWrapper({
-    ...requestProperties(),
-    url: `${getEndpoint(getConfig().api.COMMITTED_AMOUNTS)}`,
-    qs: {
-      tokenAddress,
-      walletAddress
-    }
-  })
-}
-
-/**
- *
  * @returns {Promise<*>}
  */
 async function getFeeComponents () {
@@ -190,7 +153,5 @@ module.exports = {
   getCandlesticks,
   getCandlesticksIntervals,
   getOrderInfo,
-  getAvailableBalance,
-  getFeeComponents,
-  getCommittedAmounts
+  getFeeComponents
 }
