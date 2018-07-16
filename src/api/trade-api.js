@@ -98,6 +98,28 @@ async function cancelOrder ({orderHash}) {
 }
 
 /**
+ *
+ * @param {Object} params
+ * @param params.baseTokenAddress
+ * @param params.quoteTokenAddress
+ * @returns {Promise<*>}
+ */
+async function cancelAllOrders (params) {
+  let qs = {}
+  if (params && params.baseTokenAddress && params.quoteTokenAddress) {
+    qs = {
+      baseTokenAddress: params.baseTokenAddress,
+      quoteTokenAddress: params.quoteTokenAddress
+    }
+  }
+  return authRequestWrapper({
+    ...requestProperties('DELETE'),
+    url: `${getEndpoint(getConfig().api.ORDER_INFO)}`,
+    qs: qs
+  })
+}
+
+/**
  * To get user history
  * @param {Object=} params
  * @param {string} params.userId=null
@@ -168,6 +190,7 @@ module.exports = {
   placeMarketOrder,
   placeLimitOrder,
   cancelOrder,
+  cancelAllOrders,
   getUserHistory,
   userData
 }

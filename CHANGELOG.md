@@ -1,6 +1,12 @@
 CHANGELOG
 =============
 
+1.2.1
+-----
+
+* unsignedTargetOrder for newLimitOrder can contain `error` field if target order could not be created
+* add `cancelAllOrders` method
+
 1.1.1
 -----
 

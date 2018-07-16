@@ -66,11 +66,16 @@ export default class Wallet {
    */
   async setTokenAllowanceUnlimited ({walletAddress, tokenAddress, onSubmit}) {
     const ownerAddress = walletAddress || this.web3.eth.defaultAccount
-    await this.zeroEx.token.setUnlimitedProxyAllowanceAsync(tokenAddress, ownerAddress)
+    const txHash = await this.zeroEx.token.setUnlimitedProxyAllowanceAsync(tokenAddress, ownerAddress)
 
     if (onSubmit) onSubmit()
 
-    return true
+    try {
+      await this.zeroEx.awaitTransactionMinedAsync(txHash)
+      return true
+    } catch (e) {
+      return false
+    }
   }
 
   /**

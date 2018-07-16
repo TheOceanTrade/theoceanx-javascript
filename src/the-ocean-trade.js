@@ -36,10 +36,10 @@ export class Trade {
    * price, then this function will get all the orders that are bidding for ZRX
    * and places until your amount is reached.
    *
-   * 1. Request market/reserve with token pair and amount
+   * 1. Request market_order/reserve with token pair and amount
    * 2. Returns unsigned order with unique ID
    * 3. Sign the order with zeroEx
-   * 4. Places the order with market/place with the signed order and intent ID
+   * 4. Places the order with market_order/place with the signed order and intent ID
    * @param {Object} params
    * @param {String} params.baseTokenAddress The address of base token
    * @param {String} params.quoteTokenAddress The address of quote token
@@ -47,21 +47,25 @@ export class Trade {
    * @param {String} params.orderAmount The amount of tokens to sell or buy
    * @param {String} params.feeOption=('feeInZrx'|'feeInNative') Chosen fee method
    * @param {String} [account=web3.defaultAccount] The address of the account
+   * @callback {reservedCallback} onReserved The callback called when was reserved
    * @returns {Promise<NewMarketOrderResponse>}
    */
-  async newMarketOrder (params, account = this.web3.eth.defaultAccount) {
+  async newMarketOrder (params, account = this.web3.eth.defaultAccount, onReserved) {
     if (!isEthereumAddress(account)) {
       throw Error(`Bad account provided (${account}) to newMarketOrder`)
     }
     const reserve = await api.trade.reserveMarketOrder({ walletAddress: account, ...params })
+    if (onReserved) {
+      onReserved()
+    }
     // console.log(reserve) //TODO: this result is suspiciously rich object
 
-    const marketOrder = Object.assign({}, reserve.unsignedOrder, {maker: account})
-    const signedMarketOrder = await this._signOrder(marketOrder, account)
-    const serializedMarketOrder = serializers.serializeOrder(signedMarketOrder)
+    const matchingOrder = Object.assign({}, reserve.unsignedMatchingOrder, {maker: account})
+    const signedMatchingOrder = await this._signOrder(matchingOrder, account)
+    const serializedMatchingOrder = serializers.serializeOrder(signedMatchingOrder)
     const order = {
-      signedOrder: serializedMarketOrder,
-      marketOrderID: reserve.marketOrderID
+      signedMatchingOrder: serializedMatchingOrder,
+      matchingOrderID: reserve.matchingOrderID
     }
     return api.trade.placeMarketOrder({order})
   }
@@ -70,11 +74,11 @@ export class Trade {
    * To place a side market order for any available orders at a better price, then
    * posts an order to the order book for the remaining amount
    *
-   * 1. Request limit/reserve with token pair, amount and limitPrice
-   * 2. Returns 2 unsigned orders with unique limiOrderID. One is the matching order (if any)
+   * 1. Request limit_order/reserve with token pair, amount and limitPrice
+   * 2. Returns 2 unsigned orders. One is the matching order (if any)
    * and the other is the order that will go to the order book
    * 3. Sign both orders with zeroEx
-   * 4. Place the orders with market/submit with the signed orders and limitOrderID
+   * 4. Place the orders with limit_order/place with the signed orders
    *
    * @param {Object} params
    * @param {String} params.baseTokenAddress The address of base token
@@ -83,25 +87,30 @@ export class Trade {
    * @param {String} params.orderAmount The amount of tokens to sell or buy
    * @param {String} params.feeOption=('feeInZrx'|'feeInNative') Chosen fee method
    * @param {String} [account=web3.defaultAccount] The address of the placing account
+   * @callback {reservedCallback} onReserved The callback called when was reserved
    * @returns {Promise<PlaceLimitOrderNotImmediatelyPlaceableResponse|PlaceLimitOrderPartiallyImmediatelyPlaceableResponse|PlaceLimitOrderCompletelyImmediatelyPlaceableResponse>}
    */
-  async newLimitOrder (params, account = this.web3.eth.defaultAccount) {
+  async newLimitOrder (params, account = this.web3.eth.defaultAccount, onReserved) {
     if (!isEthereumAddress(account)) {
       throw Error(`Bad account provided (${account}) to newLimitOrder`)
     }
     const reserve = await api.trade.reserveLimitOrder({ walletAddress: account, ...params })
+    if (onReserved) {
+      onReserved(reserve)
+    }
+
     const order = {}
-    if (reserve.unsignedTargetOrder) {
+    if (reserve.unsignedTargetOrder && reserve.unsignedTargetOrder.error === undefined) {
       const targetOrder = Object.assign({}, reserve.unsignedTargetOrder, {maker: account})
       const signedTargetOrder = await this._signOrder(targetOrder, account)
       order.signedTargetOrder = serializers.serializeOrder(signedTargetOrder)
     }
-    if (reserve.unsignedMarketOrder) {
-      const marketOrder = Object.assign({}, reserve.unsignedMarketOrder, {maker: account})
-      const signedMarketOrder = await this._signOrder(marketOrder, account)
-      const serializedMarketOrder = serializers.serializeOrder(signedMarketOrder)
-      order.signedMarketOrder = serializedMarketOrder
-      order.marketOrderID = reserve.marketOrderID
+    if (reserve.unsignedMatchingOrder) {
+      const matchingOrder = Object.assign({}, reserve.unsignedMatchingOrder, {maker: account})
+      const signedMatchingOrder = await this._signOrder(matchingOrder, account)
+      const serializedMatchingOrder = serializers.serializeOrder(signedMatchingOrder)
+      order.signedMatchingOrder = serializedMatchingOrder
+      order.matchingOrderID = reserve.matchingOrderID
     }
 
     return api.trade.placeLimitOrder({order})
@@ -115,6 +124,17 @@ export class Trade {
    */
   async cancelOrder (params) {
     return api.trade.cancelOrder(params)
+  }
+
+  /**
+   * Cancels all open order. Provide token pair to limit delete to it.
+   * @param {Object} params
+   * @param {String} params.baseTokenAddress The address of base token
+   * @param {String} params.quoteTokenAddress The address of quote token
+   * @returns {Promise<OceanOrder>} the cancelled orders
+   */
+  async cancelAllOrders (params) {
+    return api.trade.cancelAllOrders(params)
   }
 
   /**
