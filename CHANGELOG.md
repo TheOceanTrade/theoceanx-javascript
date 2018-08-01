@@ -1,6 +1,13 @@
 CHANGELOG
 =============
 
+1.2.4
+-----
+
+* add property `wsConnectionError` to Error with the value true when a Websocket connection could not be established
+* remove warning when you do not initialize the client with a web3 provider
+* change warning message when initialized without authentication
+
 1.2.1
 -----
 

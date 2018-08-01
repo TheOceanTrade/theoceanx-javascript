@@ -35,15 +35,15 @@ const refreshTokens = async () => {
     method: 'POST',
     url: urljoin(getConfig().api.baseURL, getConfig().api.AUTH_REFRESH),
     body: {
-      userId: username,
-      refreshToken: refreshToken.token
+      email: username,
+      refreshToken: refreshToken
     }
   })
 
-  if (response.body.accessToken) {
-    accessToken = response.body.accessToken
-    idToken = response.body.idToken
-    refreshToken = response.body.refreshToken
+  if (response.accessToken) {
+    accessToken = response.accessToken
+    idToken = response.idToken
+    refreshToken = response.refreshToken
   }
 }
 
@@ -103,7 +103,7 @@ async function authRequestWrapper (params, retries = 5) {
   } catch (error) {
     // check to see if this is expired access token
     // if it refresh the token and try the request again
-    if (error.statusCode === 401 && isDashboardAuth()) {
+    if (error.statusCode === 401 && isDashboardAuth() && error.message === 'Authentication failed') {
       await refreshTokens()
 
       return authRequestWrapper(params, --retries)

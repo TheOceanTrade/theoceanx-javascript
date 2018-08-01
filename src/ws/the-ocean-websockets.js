@@ -46,6 +46,16 @@ export default class OceanXStreams {
     }
   }
 
+  _transformError (error, errorType) {
+    if (errorType === 'connect_error' && error.message === 'xhr poll error') {
+      const newError = new Error('The Ocean client could not connect to the websocket server.')
+      newError.wsConnectionError = true
+      return newError
+    }
+
+    return error
+  }
+
   /**
    * Subscribe to channel
    * @param channel
@@ -106,7 +116,7 @@ export default class OceanXStreams {
       })
       this.handledErrorEvents.forEach(errorType => this.io.on(errorType, (error) => {
         this.connected = false
-        reject(error)
+        reject(this._transformError(error, errorType))
       }))
     })
   }

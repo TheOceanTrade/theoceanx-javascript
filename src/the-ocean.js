@@ -26,10 +26,9 @@ async function createTheOcean (config = {}) {
   } else if (dashboardAuth) {
     await setDashboardUserTokens(config.dashboardAuth.username, config.dashboardAuth.accessToken, config.dashboardAuth.idToken, config.dashboardAuth.refreshToken)
   } else {
-    console.warn('OceanX client initialized without authentication! Trade methods are unavailable.')
+    console.warn('Ocean client initialized without authentication! Trade methods are unavailable.')
   }
   if (!config.web3Provider) {
-    console.warn('OceanX client initialized without web3 provider! Only market data methods are available.')
     return {
       marketData: new MarketData(),
       ws: new OceanXStreams(getConfig().websockets)

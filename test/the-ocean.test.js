@@ -14,23 +14,6 @@ describe('MarketData ', () => {
     })
   })
 
-  it('warns about initialization without web3 provider and exposes only marketData & stream methods', async () => {
-    console.warn = jest.fn(warn => {})
-    const api = await createTheOcean({
-      api: {
-        baseURL: process.env.API_URL
-      }
-    })
-    expect(api).toBeDefined()
-    expect(console.warn).toHaveBeenCalledWith('OceanX client initialized without web3 provider! Only market data methods are available.')
-    expect(api.marketData).toBeDefined()
-    expect(api.ws).toBeDefined()
-    expect(api.wallet).toBeUndefined()
-    expect(api.getWeb3Accounts).toBeUndefined()
-    expect(api.setApiKeyAndSecret).toBeUndefined()
-    expect(api.trade).toBeUndefined()
-  })
-
   it('warns about initialization without authentication and hides trade methods', async () => {
     console.warn = jest.fn(warn => {})
     let web3Provider = new Web3.providers.HttpProvider('https://kovan.infura.io/XGsH1k50zyZmp6J5CwUz')
@@ -41,7 +24,7 @@ describe('MarketData ', () => {
       }
     })
     expect(api).toBeDefined()
-    expect(console.warn).toHaveBeenCalledWith('OceanX client initialized without authentication! Trade methods are unavailable.')
+    expect(console.warn).toHaveBeenCalledWith('Ocean client initialized without authentication! Trade methods are unavailable.')
     expect(api.marketData).toBeDefined()
     expect(api.ws).toBeDefined()
     expect(api.wallet).toBeDefined()
