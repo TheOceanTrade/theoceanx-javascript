@@ -52,6 +52,7 @@ export default class Wallet {
       await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
     } catch (e) {
+      console.error('setTokenAllowance Error', e)
       return false
     }
   }
@@ -74,6 +75,7 @@ export default class Wallet {
       await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
     } catch (e) {
+      console.error('setTokenAllowanceUnlimited Error', e)
       return false
     }
   }
@@ -92,12 +94,13 @@ export default class Wallet {
     const depositor = address || this.web3.eth.defaultAccount
     const txHash = await this.zeroEx.etherToken.depositAsync(walletAddress, bigAmount, depositor)
 
-    if (onSubmit) onSubmit()
+    if (onSubmit) onSubmit(txHash)
 
     try {
       await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
     } catch (e) {
+      console.error('wrapEth Error', e)
       return false
     }
   }
@@ -116,12 +119,13 @@ export default class Wallet {
     const withdrawer = address || this.web3.eth.defaultAccount
     const txHash = await this.zeroEx.etherToken.withdrawAsync(etherTokenAddress, bigAmount, withdrawer)
 
-    if (onSubmit) onSubmit()
+    if (onSubmit) onSubmit(txHash)
 
     try {
       await this.zeroEx.awaitTransactionMinedAsync(txHash)
       return true
     } catch (e) {
+      console.error('unwrapEth Error', e)
       return false
     }
   }

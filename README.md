@@ -1,2 +1,2 @@
-# the-ocean
+# The-ocean
 Please refer to our documentation at https://docs.theocean.trade/

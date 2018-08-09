@@ -56,9 +56,8 @@ export class Trade {
     }
     const reserve = await api.trade.reserveMarketOrder({ walletAddress: account, ...params })
     if (onReserved) {
-      onReserved()
+      onReserved(reserve)
     }
-    // console.log(reserve) //TODO: this result is suspiciously rich object
 
     const matchingOrder = Object.assign({}, reserve.unsignedMatchingOrder, {maker: account})
     const signedMatchingOrder = await this._signOrder(matchingOrder, account)

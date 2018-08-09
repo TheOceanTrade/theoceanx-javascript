@@ -76,6 +76,15 @@ export default class OceanXStreams {
     }
   }
 
+  resubscribeAll () {
+    let subscriptions = this.getSubscriptions()
+    Object.keys(subscriptions).forEach(key => {
+      for (let subscription of subscriptions[key]) {
+        subscription.resubscribe()
+      }
+    })
+  }
+
   /**
    * Get all subscriptions
    * TODO: this class should reconstruct to a structure similar to the one that the user sent in the subscription
@@ -107,12 +116,34 @@ export default class OceanXStreams {
   connect () {
     return new Promise((resolve, reject) => {
       const authQuery = getWsAuthQuery()
-      this.io = io(this.url, { query: authQuery })
+      this.io = io(this.url, { query: authQuery, forceNew: true })
       this.io.on('connect', () => {
-        this._initControllers()
+        debug('connect event')
         this.io.on(RESPONSE_CHANNEL, this._messageHandler)
         this.connected = true
+        if (Object.keys(CONTROLLERS).length === 0) {
+          this._initControllers()
+        }
         resolve()
+      })
+      this.io.on('reconnect', (attempt) => {
+        debug('reconnect event')
+        this.resubscribeAll()
+      })
+      this.io.on('reconnecting', (attempt) => {
+        debug('reconnecting')
+      })
+      this.io.on('reconnect_error', (error) => {
+        debug('reconnect_error event: %s', error)
+      })
+      this.io.on('reconnect_failed', () => {
+        debug('reconnect_failed event')
+      })
+      this.io.on('disconnect', (attempt) => {
+        debug('disconnect event')
+      })
+      this.io.on('error', (error) => {
+        debug('error: %s', error)
       })
       this.handledErrorEvents.forEach(errorType => this.io.on(errorType, (error) => {
         this.connected = false

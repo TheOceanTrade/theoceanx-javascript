@@ -27,6 +27,7 @@ export default class BaseStream {
    */
   subscribe (payload) {
     const message = {type: SUBSCRIBE, channel: this.channel, payload}
+    this._debug('subscribing %s with params %s', SEND_CHANNEL, message)
     this.io.emit(SEND_CHANNEL, message)
   }
 
@@ -52,9 +53,22 @@ export default class BaseStream {
       }
     }
 
+    const resubscribeFn = (channelId, channel, payload) => {
+      return () => {
+        payload.snapshot = false
+        this._debug('resubscribe %s with params %O', channelId, payload)
+        this.io.emit(SEND_CHANNEL, {
+          type: SUBSCRIBE,
+          channel: channel,
+          payload: payload
+        })
+      }
+    }
+
     this.subscriptions[channelId] = {
       callback: callback,
-      unsubscribe: unsubscribeFn.call(this, channelId, this.channel, unsubscriptionParams)
+      unsubscribe: unsubscribeFn.call(this, channelId, this.channel, unsubscriptionParams),
+      resubscribe: resubscribeFn.call(this, channelId, this.channel, unsubscriptionParams)
     }
 
     return this.subscriptions[channelId]
@@ -68,6 +82,12 @@ export default class BaseStream {
     Object.keys(this.subscriptions).forEach(key => {
       this.subscriptions[key].unsubscribe()
       delete this.subscriptions[key]
+    })
+  }
+
+  resubscribeAll () {
+    Object.keys(this.subscriptions).forEach(key => {
+      this.subscriptions[key].resubscribe()
     })
   }
 
