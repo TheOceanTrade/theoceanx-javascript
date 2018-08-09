@@ -17,7 +17,8 @@ export default class BaseUserStream extends BaseStream {
   getSubscriptions () {
     return map(this.subscriptions, (subscription, key) => ({
       [this.channel]: key,
-      unsubscribe: subscription.unsubscribe
+      unsubscribe: subscription.unsubscribe,
+      resubscribe: subscription.resubscribe
     }))
   }
 

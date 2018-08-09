@@ -26,7 +26,8 @@ export default class GenericPairsStream extends BaseStream {
       subs.push({
         baseTokenAddress: channelId[channelId.length - 2],
         quoteTokenAddress: channelId[channelId.length - 1],
-        unsubscribe: subscription.unsubscribe
+        unsubscribe: subscription.unsubscribe,
+        resubscribe: subscription.resubscribe
       })
     })
     return subs

@@ -1,6 +1,12 @@
 CHANGELOG
 =============
 
+1.3.0
+-----
+
+* Handle ws reconnect
+* Handle ws resubscribe
+
 1.2.4
 -----
 

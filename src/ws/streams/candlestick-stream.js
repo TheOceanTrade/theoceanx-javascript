@@ -27,7 +27,8 @@ export default class CandlestickStream extends BaseStream {
         baseTokenAddress: channelId[channelId.length - 3],
         quoteTokenAddress: channelId[channelId.length - 2],
         interval: channelId[channelId.length - 1],
-        unsubscribe: subscription.unsubscribe
+        unsubscribe: subscription.unsubscribe,
+        resubscribe: subscription.resubscribe
       })
     })
     return subs
